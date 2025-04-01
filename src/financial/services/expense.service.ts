@@ -100,7 +100,7 @@ export class ExpenseService {
     const csvPromise = new Promise<CreateExpenseDto[]>((resolve, reject) => {
       parse(
         buffer,
-        { delimiter: ',', columns: true },
+        { delimiter: ';', columns: true },
         function (
           err,
           rows: {
@@ -108,17 +108,26 @@ export class ExpenseService {
             name: string;
             amount: string;
             payerId: string;
+            splitMemberIdsToExclude: string;
           }[],
         ) {
           if (err) reject(err);
 
           const data: CreateExpenseDto[] = [];
           rows.map((row) => {
+            const splitMemberIdsToExclude =
+              row.splitMemberIdsToExclude === ''
+                ? []
+                : row.splitMemberIdsToExclude
+                    .split(',')
+                    .map((id) => parseInt(id));
+
             data.push({
               groupId: parseInt(row.groupId),
               name: row.name,
               amount: parseFloat(row.amount),
               payerId: parseInt(row.payerId),
+              splitMemberIdsToExclude,
             });
           });
 
