@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateExpenseDto } from '../dtos/expense';
 import { UserService } from 'src/user/services/user.service';
 import { ManagementGroupService } from './management.group.service';
+import { parse } from 'csv-parse';
 
 @Injectable()
 export class ExpenseService {
@@ -23,5 +24,47 @@ export class ExpenseService {
     expense.payer = await this.userService.get(dto.payerId);
 
     return await this.expenseRepository.save(expense);
+  }
+
+  async createBatch(buffer: Buffer): Promise<boolean> {
+    const dtos = await this.parseCsv(buffer);
+    for (const dto of dtos) {
+      await this.create(dto);
+    }
+    return true;
+  }
+
+  private async parseCsv(buffer: Buffer): Promise<CreateExpenseDto[]> {
+    const csvPromise = new Promise<CreateExpenseDto[]>((resolve, reject) => {
+      parse(
+        buffer,
+        { delimiter: ',', columns: true },
+        function (
+          err,
+          rows: {
+            groupId: string;
+            name: string;
+            amount: string;
+            payerId: string;
+          }[],
+        ) {
+          if (err) reject(err);
+
+          const data: CreateExpenseDto[] = [];
+          rows.map((row) => {
+            data.push({
+              groupId: parseInt(row.groupId),
+              name: row.name,
+              amount: parseFloat(row.amount),
+              payerId: parseInt(row.payerId),
+            });
+          });
+
+          resolve(data);
+        },
+      );
+    });
+
+    return csvPromise;
   }
 }
