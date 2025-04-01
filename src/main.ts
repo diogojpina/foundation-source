@@ -12,6 +12,12 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: '*',
+  });
+
   const config = new DocumentBuilder()
     .setTitle('API')
     .setDescription('API doc.')
