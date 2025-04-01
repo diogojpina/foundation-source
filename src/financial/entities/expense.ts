@@ -27,7 +27,7 @@ export class Expense {
   payer: User;
 
   @Column({ default: ExpenseStatus.OPEN })
-  status: ExpenseStatus;
+  status: string;
 
   @CreateDateColumn()
   createdAt: Date;

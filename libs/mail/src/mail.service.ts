@@ -7,7 +7,7 @@ export class MailService {
     subject: string,
     message: any,
   ): Promise<boolean> {
-    console.log(`sending message to: ${to} (${subject})`);
+    console.log(`sending message to: ${to} - subject: (${subject})`);
     console.log('message', message);
     return await Promise.resolve(true);
   }

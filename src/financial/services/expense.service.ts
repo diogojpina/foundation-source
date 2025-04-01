@@ -6,6 +6,7 @@ import { CreateExpenseDto } from '../dtos/expense';
 import { UserService } from 'src/user/services/user.service';
 import { ManagementGroupService } from './management.group.service';
 import { parse } from 'csv-parse';
+import { NotificationService } from './notification.service';
 
 @Injectable()
 export class ExpenseService {
@@ -14,6 +15,7 @@ export class ExpenseService {
     private readonly expenseRepository: Repository<Expense>,
     private readonly managementGroupService: ManagementGroupService,
     private readonly userService: UserService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async search(): Promise<Expense[]> {
@@ -42,7 +44,11 @@ export class ExpenseService {
     expense.group = await this.managementGroupService.get(dto.groupId);
     expense.payer = await this.userService.get(dto.payerId);
 
-    return await this.expenseRepository.save(expense);
+    await this.expenseRepository.save(expense);
+
+    await this.notificationService.notifyNewExpense(expense);
+
+    return expense;
   }
 
   async createBatch(buffer: Buffer): Promise<boolean> {

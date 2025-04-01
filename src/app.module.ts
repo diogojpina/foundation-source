@@ -5,7 +5,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { configuration } from './config/configutation';
+import { configuration, environment } from './config/configutation';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -24,6 +25,16 @@ import { configuration } from './config/configutation';
         };
       },
       inject: [ConfigService],
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: environment.redis.host,
+        port: environment.redis.port,
+      },
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: true,
+      },
     }),
     FinancialModule,
     UserModule,

@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Expense } from '../entities/expense';
-import { MailService } from '@app/mail';
 import { ManagementGroupService } from './management.group.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { QUEUE_ENUM } from 'src/common/enum/queue.enum';
+import { Queue } from 'bullmq';
+import { EmailDto } from '../dtos/email/email.dto';
+import { JOB_ENUM } from 'src/common/enum/job.enum';
 
 @Injectable()
 export class NotificationService {
   constructor(
-    private readonly mailService: MailService,
     private readonly managementGroupService: ManagementGroupService,
+    @InjectQueue(QUEUE_ENUM.NOTIFICATION)
+    private readonly queue: Queue,
   ) {}
 
   async notifyNewExpense(expense: Expense): Promise<void> {
@@ -22,11 +27,15 @@ export class NotificationService {
     };
 
     for (const member of members) {
-      await this.mailService.sendEmail(
-        member.email,
-        'New Expense',
-        messageData,
-      );
+      const email: EmailDto = {
+        to: member.email,
+        subject: 'New Expense',
+        mesage: messageData,
+      };
+
+      await this.queue.add(JOB_ENUM.NOTIFICATION.EMAIL, email, {
+        removeOnComplete: true,
+      });
     }
   }
 
@@ -42,11 +51,15 @@ export class NotificationService {
     };
 
     for (const member of members) {
-      await this.mailService.sendEmail(
-        member.email,
-        'Expense Settled',
-        messageData,
-      );
+      const email: EmailDto = {
+        to: member.email,
+        subject: 'Expense Settled',
+        mesage: messageData,
+      };
+
+      await this.queue.add(JOB_ENUM.NOTIFICATION.EMAIL, email, {
+        removeOnComplete: true,
+      });
     }
   }
 }
