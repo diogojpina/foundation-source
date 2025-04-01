@@ -15,7 +15,7 @@ export class Expense {
   id: number;
 
   @ManyToOne(() => ManagementGroup, (group) => group.expenses)
-  group: ManagementGroup[];
+  group: ManagementGroup;
 
   @Column()
   name: string;

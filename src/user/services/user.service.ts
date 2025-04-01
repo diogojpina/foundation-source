@@ -11,6 +11,21 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async get(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: {
+        expensesPaid: true,
+        expensesSplited: true,
+      },
+    });
+
+    if (!user)
+      throw new HttpException('User not found!', HttpStatus.BAD_REQUEST);
+
+    return user;
+  }
+
   async create(dto: CreateUserDto): Promise<User> {
     const existingUsers = await this.userRepository.findOne({
       where: { email: dto.email },
