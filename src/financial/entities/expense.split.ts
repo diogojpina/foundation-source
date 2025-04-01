@@ -14,7 +14,7 @@ export class ExpenseSplit {
   @ManyToOne(() => User, (payer) => payer.expensesSplited)
   payer: User;
 
-  @Column()
+  @Column('numeric', { precision: 7, scale: 2 })
   amount: number;
 
   @Column()

@@ -33,4 +33,10 @@ export class ManagementGroupController {
   ): Promise<boolean> {
     return await this.managementGroupService.addMembers(id, dto);
   }
+
+  @Get('/balance/:id')
+  async balance(@Param('id') id: number) {
+    const map = await this.managementGroupService.calcBalance(id);
+    return Object.fromEntries(map);
+  }
 }

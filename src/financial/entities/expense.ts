@@ -21,7 +21,7 @@ export class Expense {
   @Column()
   name: string;
 
-  @Column()
+  @Column('numeric', { precision: 7, scale: 2 })
   amount: number;
 
   @ManyToOne(() => User, (payer) => payer.expensesPaid)

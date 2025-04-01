@@ -4,6 +4,7 @@ import { ManagementGroup } from '../entities/management.group';
 import { Repository } from 'typeorm';
 import { AddMembersDto, CreateManagementGroupDto } from '../dtos';
 import { User } from 'src/user/entities/user.entity';
+import { ExpenseSplitStatus } from '../enums/expanse.split.status.enum';
 
 @Injectable()
 export class ManagementGroupService {
@@ -82,5 +83,54 @@ export class ManagementGroupService {
     await this.managementGroupRepository.save(group);
 
     return true;
+  }
+
+  async calcBalance(id: number): Promise<Map<number, number>> {
+    const group = await this.managementGroupRepository.findOne({
+      where: { id },
+      relations: {
+        members: true,
+        expenses: {
+          payer: true,
+          splits: {
+            payer: true,
+          },
+        },
+      },
+    });
+
+    if (!group)
+      throw new HttpException(
+        'Management group not found!',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const membersMap = new Map<number, number>();
+    group.members.map((member) => membersMap.set(member.id, 0));
+
+    for (const expense of group.expenses) {
+      const expensePayerAmount = membersMap.get(expense.payer.id);
+      if (expensePayerAmount !== undefined)
+        membersMap.set(expense.payer.id, expensePayerAmount + expense.amount);
+
+      for (const split of expense.splits) {
+        const splitPayerAmount = membersMap.get(split.payer.id);
+        if (splitPayerAmount === undefined) continue;
+
+        let newAmount = 0;
+        if (split.status === ExpenseSplitStatus.SETTLED) {
+          if (split.payer.id === expense.payer.id) {
+            newAmount = splitPayerAmount - split.amount;
+          } else {
+            newAmount = splitPayerAmount + split.amount;
+          }
+        } else {
+          newAmount = splitPayerAmount - split.amount;
+        }
+        membersMap.set(split.payer.id, newAmount);
+      }
+    }
+
+    return membersMap;
   }
 }
