@@ -3,7 +3,7 @@ export const environment = {
     path:
       process.env.NODE_ENV === 'test'
         ? './database/test.sqlite'
-        : './database/project-mark.sqlite',
+        : './database/prod.sqlite',
   },
 };
 
