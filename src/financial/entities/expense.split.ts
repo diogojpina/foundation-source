@@ -1,6 +1,6 @@
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ExpenseStatus } from '../enums/expanse.status.enum';
+import { ExpenseSplitStatus } from '../enums/expanse.split.status.enum';
 import { Expense } from './expense';
 
 @Entity()
@@ -20,8 +20,8 @@ export class ExpenseSplit {
   @Column()
   percentage: number;
 
-  @Column({ default: ExpenseStatus.OPEN })
-  status: string;
+  @Column({ type: String, default: ExpenseSplitStatus.OPEN })
+  status: ExpenseSplitStatus.OPEN | ExpenseSplitStatus.SETTLED;
 
   @Column({ nullable: true })
   settledAt?: Date;

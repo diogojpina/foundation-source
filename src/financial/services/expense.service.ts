@@ -8,6 +8,8 @@ import { ManagementGroupService } from './management.group.service';
 import { parse } from 'csv-parse';
 import { NotificationService } from './notification.service';
 import { ExpenseSplit } from '../entities/expense.split';
+import { SettleExpenseDto } from '../dtos/expense/settle.expense.dto';
+import { ExpenseSplitStatus } from '../enums/expanse.split.status.enum';
 
 @Injectable()
 export class ExpenseService {
@@ -29,6 +31,9 @@ export class ExpenseService {
       relations: {
         group: true,
         payer: true,
+        splits: {
+          payer: true,
+        },
       },
     });
 
@@ -60,6 +65,26 @@ export class ExpenseService {
       await this.create(dto);
     }
     return true;
+  }
+
+  async settle(id: number, dto: SettleExpenseDto): Promise<Expense> {
+    const expense = await this.get(id);
+
+    const selectedSplits = expense.splits.filter((split) =>
+      dto.memberIds.includes(split.payer.id),
+    );
+
+    for (const split of selectedSplits) {
+      if (split.status === ExpenseSplitStatus.SETTLED) continue;
+      split.status = ExpenseSplitStatus.SETTLED;
+      split.settledAt = new Date();
+
+      await this.notificationService.notifyExpenseSplitSettled(expense, split);
+    }
+
+    await this.expenseRepository.save(expense);
+
+    return expense;
   }
 
   private async split(

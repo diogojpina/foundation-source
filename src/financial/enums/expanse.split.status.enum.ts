@@ -1,4 +1,4 @@
-export enum ExpenseStatus {
+export enum ExpenseSplitStatus {
   OPEN = 'open',
   SETTLED = 'settled',
 }

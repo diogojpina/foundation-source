@@ -14,6 +14,7 @@ import { ExpenseService } from '../services/expense.service';
 import { CreateExpenseDto } from '../dtos/expense';
 import { Expense } from '../entities/expense';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { SettleExpenseDto } from '../dtos/expense/settle.expense.dto';
 
 @Controller('expense')
 export class ExpenseController {
@@ -48,5 +49,13 @@ export class ExpenseController {
     file: Express.Multer.File,
   ): Promise<boolean> {
     return await this.expenseService.createBatch(file.buffer);
+  }
+
+  @Post('/settle/:id')
+  async settle(
+    @Param('id') id: number,
+    @Body() dto: SettleExpenseDto,
+  ): Promise<Expense> {
+    return await this.expenseService.settle(id, dto);
   }
 }
