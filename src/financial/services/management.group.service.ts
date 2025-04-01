@@ -34,6 +34,23 @@ export class ManagementGroupService {
     return group;
   }
 
+  async getMembers(id: number): Promise<User[]> {
+    const group = await this.managementGroupRepository.findOne({
+      where: { id },
+      relations: {
+        members: true,
+      },
+    });
+
+    if (!group) return [];
+
+    const members: User[] = [];
+    for (const member of group.members) {
+      members.push(member);
+    }
+    return members;
+  }
+
   async create(dto: CreateManagementGroupDto): Promise<ManagementGroup> {
     return await this.managementGroupRepository.save(dto);
   }
