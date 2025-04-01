@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Expense } from '../entities/expense';
 import { Repository } from 'typeorm';
@@ -15,6 +15,25 @@ export class ExpenseService {
     private readonly managementGroupService: ManagementGroupService,
     private readonly userService: UserService,
   ) {}
+
+  async search(): Promise<Expense[]> {
+    return await this.expenseRepository.find();
+  }
+
+  async get(id: number): Promise<Expense> {
+    const expense = await this.expenseRepository.findOne({
+      where: { id },
+      relations: {
+        group: true,
+        payer: true,
+      },
+    });
+
+    if (!expense)
+      throw new HttpException('Expense not found!', HttpStatus.BAD_REQUEST);
+
+    return expense;
+  }
 
   async create(dto: CreateExpenseDto): Promise<Expense> {
     const expense = new Expense();

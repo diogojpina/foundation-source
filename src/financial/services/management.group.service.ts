@@ -12,6 +12,10 @@ export class ManagementGroupService {
     private readonly managementGroupRepository: Repository<ManagementGroup>,
   ) {}
 
+  async search(): Promise<ManagementGroup[]> {
+    return await this.managementGroupRepository.find();
+  }
+
   async get(id: number): Promise<ManagementGroup> {
     const group = await this.managementGroupRepository.findOne({
       where: { id },

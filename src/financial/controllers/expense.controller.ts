@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  Get,
   MaxFileSizeValidator,
+  Param,
   ParseFilePipe,
   Post,
   UploadedFile,
@@ -16,6 +18,16 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('expense')
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
+
+  @Get()
+  async search(): Promise<Expense[]> {
+    return await this.expenseService.search();
+  }
+
+  @Get('/:id')
+  async get(@Param('id') id: number): Promise<Expense> {
+    return await this.expenseService.get(id);
+  }
 
   @Post()
   async create(@Body() dto: CreateExpenseDto): Promise<Expense> {

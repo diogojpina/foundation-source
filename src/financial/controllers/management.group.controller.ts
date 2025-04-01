@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AddMembersDto, CreateManagementGroupDto } from '../dtos';
 import { ManagementGroup } from '../entities/management.group';
 import { ManagementGroupService } from '../services/management.group.service';
@@ -8,6 +8,16 @@ export class ManagementGroupController {
   constructor(
     private readonly managementGroupService: ManagementGroupService,
   ) {}
+
+  @Get()
+  async search(): Promise<ManagementGroup[]> {
+    return await this.managementGroupService.search();
+  }
+
+  @Get('/:id')
+  async get(@Param('id') id: number): Promise<ManagementGroup> {
+    return await this.managementGroupService.get(id);
+  }
 
   @Post()
   async create(
