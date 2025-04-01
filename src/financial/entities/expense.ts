@@ -3,11 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ManagementGroup } from './management.group';
 import { User } from 'src/user/entities/user.entity';
-import { ExpenseStatus } from '../enums/expanse.status.enum';
+import { ExpenseSplit } from './expense.split';
 
 @Entity()
 export class Expense {
@@ -26,12 +27,9 @@ export class Expense {
   @ManyToOne(() => User, (payer) => payer.expensesPaid)
   payer: User;
 
-  @Column({ default: ExpenseStatus.OPEN })
-  status: string;
+  @OneToMany(() => ExpenseSplit, (split) => split.expense, { cascade: true })
+  splits: ExpenseSplit[];
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @Column({ nullable: true })
-  settledAt?: Date;
 }

@@ -34,12 +34,27 @@ export class ManagementGroupService {
     return group;
   }
 
+  async getSimple(id: number): Promise<ManagementGroup> {
+    const group = await this.managementGroupRepository.findOne({
+      where: { id },
+    });
+
+    if (!group)
+      throw new HttpException(
+        'Management group not found!',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    return group;
+  }
+
   async getMembers(id: number): Promise<User[]> {
     const group = await this.managementGroupRepository.findOne({
       where: { id },
       relations: {
         members: true,
       },
+      order: { id: 'ASC' },
     });
 
     if (!group) return [];

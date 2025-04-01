@@ -7,6 +7,7 @@ import { UserService } from 'src/user/services/user.service';
 import { ManagementGroupService } from './management.group.service';
 import { parse } from 'csv-parse';
 import { NotificationService } from './notification.service';
+import { ExpenseSplit } from '../entities/expense.split';
 
 @Injectable()
 export class ExpenseService {
@@ -41,8 +42,10 @@ export class ExpenseService {
     const expense = new Expense();
     Object.assign(expense, dto);
 
-    expense.group = await this.managementGroupService.get(dto.groupId);
-    expense.payer = await this.userService.get(dto.payerId);
+    expense.group = await this.managementGroupService.getSimple(dto.groupId);
+    expense.payer = await this.userService.getSimple(dto.payerId);
+
+    await this.split(expense, dto.splitMemberIdsToExclude || []);
 
     await this.expenseRepository.save(expense);
 
@@ -57,6 +60,40 @@ export class ExpenseService {
       await this.create(dto);
     }
     return true;
+  }
+
+  private async split(
+    expense: Expense,
+    splitMemberIdsToExclude: number[],
+  ): Promise<void> {
+    const groupMembers = await this.managementGroupService.getMembers(
+      expense.group.id,
+    );
+
+    const selectedMembers =
+      splitMemberIdsToExclude.length === 0
+        ? groupMembers
+        : groupMembers.filter(
+            (member) => !splitMemberIdsToExclude.includes(member.id),
+          );
+
+    const percentage = Math.floor(100 / selectedMembers.length);
+    const percentageExtra = 100 - selectedMembers.length * percentage;
+
+    expense.splits = [];
+    for (const member of selectedMembers) {
+      const split = new ExpenseSplit();
+      split.payer = member;
+
+      split.percentage = percentage;
+      if (expense.splits.length === 0 && percentageExtra > 0) {
+        split.percentage = percentage + percentageExtra;
+      }
+
+      split.amount = expense.amount * (split.percentage / 100);
+
+      expense.splits.push(split);
+    }
   }
 
   private async parseCsv(buffer: Buffer): Promise<CreateExpenseDto[]> {

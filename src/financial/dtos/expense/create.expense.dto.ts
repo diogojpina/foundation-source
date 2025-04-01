@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateExpenseDto {
   @ApiProperty()
@@ -21,4 +28,10 @@ export class CreateExpenseDto {
   @IsNumber()
   @IsNotEmpty()
   payerId: number;
+
+  @ApiProperty()
+  @IsArray()
+  @Type(() => Number)
+  @IsOptional()
+  splitMemberIdsToExclude?: number[];
 }
