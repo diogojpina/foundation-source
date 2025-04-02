@@ -85,7 +85,9 @@ export class ManagementGroupService {
     return true;
   }
 
-  async calcBalance(id: number): Promise<Map<number, number>> {
+  async calcBalance(
+    id: number,
+  ): Promise<Array<{ member: User; total: number }>> {
     const group = await this.managementGroupRepository.findOne({
       where: { id },
       relations: {
@@ -131,6 +133,13 @@ export class ManagementGroupService {
       }
     }
 
-    return membersMap;
+    const results = new Array<{ member: User; total: number }>();
+    for (const [memberId, total] of membersMap) {
+      const member = group.members.find((m) => m.id === memberId);
+      if (!member) continue;
+      results.push({ member, total });
+    }
+
+    return results;
   }
 }

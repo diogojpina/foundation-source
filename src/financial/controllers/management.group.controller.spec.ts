@@ -48,9 +48,9 @@ group2.members.push(member1, member2, member3);
 
 const groups = [group1, group2];
 
-const balanceMap = new Map<number, number>();
-balanceMap.set(1, 10);
-balanceMap.set(2, -10);
+const balanceResult = new Array<{ member: User; total: number }>();
+balanceResult.push({ member: member1, total: 10 });
+balanceResult.push({ member: member1, total: -10 });
 
 describe('ManagementGroupController', () => {
   let managementGroupController: ManagementGroupController;
@@ -62,13 +62,13 @@ describe('ManagementGroupController', () => {
       .useMocker((token) => {
         if (token === ManagementGroupService) {
           return {
-            search: jest.fn().mockResolvedValue(Promise.resolve([groups])),
+            search: jest.fn().mockResolvedValue(Promise.resolve(groups)),
             get: jest.fn().mockResolvedValue(Promise.resolve(group1)),
             create: jest.fn().mockResolvedValue(Promise.resolve(group1)),
             addMembers: jest.fn().mockResolvedValue(Promise.resolve(true)),
             calcBalance: jest
               .fn()
-              .mockResolvedValue(Promise.resolve(balanceMap)),
+              .mockResolvedValue(Promise.resolve(balanceResult)),
           };
         }
       })
@@ -113,13 +113,10 @@ describe('ManagementGroupController', () => {
 
   describe('calcBalance', () => {
     it('should return a map balance', async () => {
-      const dto = new AddMembersDto();
-      dto.memberIds = [3];
-
       const balances = await managementGroupController.balance(group1.id);
-      expect(balances).toHaveLength(2);
-      expect(balances[0]).toBe(10);
-      expect(balances[1]).toBe(-10);
+      console.log('balances', balances);
+      expect(balances[0].total).toBe(10);
+      expect(balances[1].total).toBe(-10);
     });
   });
 });

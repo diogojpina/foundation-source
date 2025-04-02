@@ -149,8 +149,8 @@ describe('ManagementGroupService', () => {
       group1.members = [member1, member2];
       const balances = await service.calcBalance(group1.id);
 
-      expect(balances.get(1)).toBe(10);
-      expect(balances.get(2)).toBe(-10);
+      expect(balances[0].total).toBe(10);
+      expect(balances[1].total).toBe(-10);
     });
   });
 });

@@ -36,7 +36,6 @@ export class ManagementGroupController {
 
   @Get('/balance/:id')
   async balance(@Param('id') id: number) {
-    const map = await this.managementGroupService.calcBalance(id);
-    return Object.fromEntries(map);
+    return await this.managementGroupService.calcBalance(id);
   }
 }

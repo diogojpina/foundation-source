@@ -60,12 +60,10 @@ describe('ExpenseController', () => {
       .useMocker((token) => {
         if (token === ExpenseService) {
           return {
-            search: jest.fn().mockResolvedValue(Promise.resolve([expenses])),
+            search: jest.fn().mockResolvedValue(Promise.resolve(expenses)),
             get: jest.fn().mockResolvedValue(Promise.resolve(expense1)),
             create: jest.fn().mockResolvedValue(Promise.resolve(expense1)),
-            createBatch: jest
-              .fn()
-              .mockResolvedValue(Promise.resolve([expenses])),
+            createBatch: jest.fn().mockResolvedValue(Promise.resolve(expenses)),
             settle: jest.fn().mockResolvedValue(Promise.resolve(expense1)),
           };
         }
