@@ -11,6 +11,9 @@ const user1 = new User();
 user1.id = 1;
 user1.email = 'john@email.com';
 user1.name = 'John Doe';
+user1.managementGroups = [];
+user1.expensesPaid = [];
+user1.expensesSplited = [];
 
 const user2 = new User();
 user1.id = 1;
@@ -83,21 +86,24 @@ describe('UserService', () => {
         .spyOn(userRepository, 'findOne')
         .mockImplementation(() => Promise.resolve(null));
 
-      const dto: CreateUserDto = {
+      const dto: CreateUserDto = new CreateUserDto();
+      Object.assign(dto, {
         name: user2.name,
         email: user2.email,
         password: '123456',
-      };
+      });
+
       const user = await service.create(dto);
       expect(user.email).toBe(user2.email);
     });
 
     it('should throw an email exists error', () => {
-      const dto: CreateUserDto = {
+      const dto: CreateUserDto = new CreateUserDto();
+      Object.assign(dto, {
         name: user2.name,
         email: user2.email,
         password: '123456',
-      };
+      });
 
       expect(service.create(dto)).rejects.toThrow(/already exists/);
     });
