@@ -86,13 +86,13 @@ describe('ManagementGroupController', () => {
   });
 
   describe('get', () => {
-    it('should return an array of management groups', async () => {
+    it('should return a management groups', async () => {
       expect(await managementGroupController.get(group1.id)).toBe(group1);
     });
   });
 
   describe('create', () => {
-    it('should create and return a management group', async () => {
+    it('should create a management group', async () => {
       const dto = new CreateManagementGroupDto();
       dto.name = group1.name;
 
