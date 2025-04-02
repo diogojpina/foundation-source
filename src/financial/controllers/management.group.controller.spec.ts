@@ -114,7 +114,6 @@ describe('ManagementGroupController', () => {
   describe('calcBalance', () => {
     it('should return a map balance', async () => {
       const balances = await managementGroupController.balance(group1.id);
-      console.log('balances', balances);
       expect(balances[0].total).toBe(10);
       expect(balances[1].total).toBe(-10);
     });
