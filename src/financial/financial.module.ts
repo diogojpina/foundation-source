@@ -13,12 +13,16 @@ import { QUEUE_ENUM } from 'src/common/enum/queue.enum';
 import { NotificationService } from './services/notification.service';
 import { MailModule } from '@app/mail';
 import { NotificationConsumer } from './consumers/notification.consumer';
+import { CreateExpenseConsumer } from './consumers/create.expense.consumer';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ManagementGroup, Expense, ExpenseSplit]),
     BullModule.registerQueue({
       name: QUEUE_ENUM.NOTIFICATION,
+    }),
+    BullModule.registerQueue({
+      name: QUEUE_ENUM.EXPENSE,
     }),
     UserModule,
     MailModule,
@@ -29,6 +33,7 @@ import { NotificationConsumer } from './consumers/notification.consumer';
     ExpenseService,
     NotificationService,
     NotificationConsumer,
+    CreateExpenseConsumer,
   ],
 })
 export class FinancialModule {}

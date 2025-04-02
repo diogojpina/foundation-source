@@ -10,6 +10,10 @@ import { NotificationService } from './notification.service';
 import { ExpenseSplit } from '../entities/expense.split';
 import { SettleExpenseDto } from '../dtos/expense/settle.expense.dto';
 import { ExpenseSplitStatus } from '../enums/expanse.split.status.enum';
+import { InjectQueue } from '@nestjs/bullmq';
+import { QUEUE_ENUM } from 'src/common/enum/queue.enum';
+import { Queue } from 'bullmq';
+import { JOB_ENUM } from 'src/common/enum/job.enum';
 
 @Injectable()
 export class ExpenseService {
@@ -19,6 +23,8 @@ export class ExpenseService {
     private readonly managementGroupService: ManagementGroupService,
     private readonly userService: UserService,
     private readonly notificationService: NotificationService,
+    @InjectQueue(QUEUE_ENUM.EXPENSE)
+    private readonly queue: Queue,
   ) {}
 
   async search(): Promise<Expense[]> {
@@ -62,7 +68,9 @@ export class ExpenseService {
   async createBatch(buffer: Buffer): Promise<boolean> {
     const dtos = await this.parseCsv(buffer);
     for (const dto of dtos) {
-      await this.create(dto);
+      await this.queue.add(JOB_ENUM.EXPENSE.CREATE, dto, {
+        removeOnComplete: true,
+      });
     }
     return true;
   }
