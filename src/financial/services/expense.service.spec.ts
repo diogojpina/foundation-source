@@ -11,6 +11,9 @@ import { ManagementGroup } from '../entities/management.group';
 import { ManagementGroupService } from './management.group.service';
 import { UserService } from '../../user/services/user.service';
 import { NotificationService } from './notification.service';
+import { SettleExpenseDto } from '../dtos/expense/settle.expense.dto';
+import { ExpenseSplit } from '../entities/expense.split';
+import { ExpenseSplitStatus } from '../enums/expanse.split.status.enum';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -32,6 +35,20 @@ expense1.group = group;
 expense1.name = 'Expense 1';
 expense1.amount = 20;
 expense1.payer = payer1;
+expense1.splits = [];
+
+const split1 = new ExpenseSplit();
+split1.payer = payer1;
+split1.amount = 10;
+split1.percentage = 50;
+split1.status = ExpenseSplitStatus.OPEN;
+
+const split2 = new ExpenseSplit();
+split2.payer = payer2;
+split2.amount = 10;
+split2.percentage = 50;
+split2.status = ExpenseSplitStatus.OPEN;
+expense1.splits.push(split1, split2);
 
 const expense2 = new Expense();
 expense2.group = group;
@@ -75,6 +92,7 @@ describe('ExpenseService', () => {
         if (token === NotificationService) {
           return {
             notifyNewExpense: jest.fn().mockResolvedValue(''),
+            notifyExpenseSplitSettled: jest.fn().mockResolvedValue(''),
           };
         }
 
@@ -118,13 +136,38 @@ describe('ExpenseService', () => {
 
   describe('create', () => {
     it('should create an expense', async () => {
-      const dto: CreateExpenseDto = {
+      const dto = new CreateExpenseDto();
+      Object.assign(dto, {
         groupId: expense1.group.id,
         name: expense1.name,
         amount: expense1.amount,
         payerId: expense1.payer.id,
-      };
+      });
+
       const expense = await service.create(dto);
+      expect(expense.id).toBe(expense1.id);
+    });
+  });
+
+  describe('createBatch', () => {
+    it('should create expenses from a csv buffer', async () => {
+      const buffer = Buffer.from(
+        'groupId;name;amount;payerId;splitMemberIdsToExclude',
+      );
+      buffer.write('1;bill 1;30;1;');
+      buffer.write('1;bill 2;29.99;1;2,3');
+
+      const response = await service.createBatch(buffer);
+      expect(response).toBeTruthy();
+    });
+  });
+
+  describe('settle', () => {
+    it('should settle an expense splits', async () => {
+      const dto = new SettleExpenseDto();
+      dto.memberIds = [1];
+
+      const expense = await service.settle(expense1.id, dto);
       expect(expense.id).toBe(expense1.id);
     });
   });
