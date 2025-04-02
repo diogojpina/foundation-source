@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "name": "Expense 1",
+        "amount": 20,
+        "group": [
+            {
+                "id": 1
+            }
+        ]
+    }
+]
