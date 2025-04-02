@@ -38,7 +38,6 @@ import { BullModule } from '@nestjs/bullmq';
     }),
     FinancialModule,
     UserModule,
-    AuthModule,
   ],
   controllers: [],
   providers: [AppService],
