@@ -15,6 +15,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/mail/tsconfig.lib.json"
       }
+    },
+    "minio": {
+      "type": "library",
+      "root": "libs/minio",
+      "entryFile": "index",
+      "sourceRoot": "libs/minio/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/minio/tsconfig.lib.json"
+      }
     }
   }
 }

@@ -23,6 +23,12 @@
       ],
       "@app/mail/*": [
         "libs/mail/src/*"
+      ],
+      "@app/minio": [
+        "libs/minio/src"
+      ],
+      "@app/minio/*": [
+        "libs/minio/src/*"
       ]
     }
   }

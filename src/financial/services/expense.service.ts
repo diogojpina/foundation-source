@@ -14,6 +14,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { QUEUE_ENUM } from '../../common/enum/queue.enum';
 import { Queue } from 'bullmq';
 import { JOB_ENUM } from '../../common/enum/job.enum';
+import { MinioService } from '@app/minio';
 
 @Injectable()
 export class ExpenseService {
@@ -25,6 +26,7 @@ export class ExpenseService {
     private readonly notificationService: NotificationService,
     @InjectQueue(QUEUE_ENUM.EXPENSE)
     private readonly queue: Queue,
+    private readonly minioService: MinioService,
   ) {}
 
   async search(): Promise<Expense[]> {
@@ -65,7 +67,9 @@ export class ExpenseService {
     return expense;
   }
 
-  async createBatch(buffer: Buffer): Promise<boolean> {
+  async createBatch(file: Express.Multer.File): Promise<boolean> {
+    this.minioService.uploadFile(file, Date.now() + '.csv');
+    const buffer = file.buffer;
     const dtos = await this.parseCsv(buffer);
     for (const dto of dtos) {
       await this.queue.add(JOB_ENUM.EXPENSE.CREATE, dto, {

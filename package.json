@@ -33,6 +33,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "csv-parse": "^5.6.0",
+    "minio": "^8.0.5",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.7",
@@ -88,7 +89,8 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/mail(|/.*)$": "<rootDir>/libs/mail/src/$1"
+      "^@app/mail(|/.*)$": "<rootDir>/libs/mail/src/$1",
+      "^@app/minio(|/.*)$": "<rootDir>/libs/minio/src/$1"
     }
   }
 }

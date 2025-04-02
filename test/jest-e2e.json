@@ -12,6 +12,8 @@
   },
   "moduleNameMapper": {
     "@app/mail": "<rootDir>/../libs/mail/src",
-    "@app/mail/(.*)": "<rootDir>/../libs/mail/src/$1"
+    "@app/mail/(.*)": "<rootDir>/../libs/mail/src/$1",
+    "@app/minio": "<rootDir>/../libs/minio/src",
+    "@app/minio/(.*)": "<rootDir>/../libs/minio/src/$1"
   }
 }

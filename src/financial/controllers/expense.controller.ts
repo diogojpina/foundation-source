@@ -48,7 +48,7 @@ export class ExpenseController {
     )
     file: Express.Multer.File,
   ): Promise<boolean> {
-    return await this.expenseService.createBatch(file.buffer);
+    return await this.expenseService.createBatch(file);
   }
 
   @Post('/settle/:id')

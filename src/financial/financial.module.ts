@@ -14,6 +14,7 @@ import { NotificationService } from './services/notification.service';
 import { MailModule } from '@app/mail';
 import { NotificationConsumer } from './consumers/notification.consumer';
 import { CreateExpenseConsumer } from './consumers/create.expense.consumer';
+import { MinioModule } from '@app/minio';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CreateExpenseConsumer } from './consumers/create.expense.consumer';
     }),
     UserModule,
     MailModule,
+    MinioModule,
   ],
   controllers: [ManagementGroupController, ExpenseController],
   providers: [
