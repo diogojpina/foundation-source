@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Expense } from '../entities/expense';
 import { Repository } from 'typeorm';
 import { CreateExpenseDto } from '../dtos/expense';
-import { UserService } from 'src/user/services/user.service';
+import { UserService } from '../../user/services/user.service';
 import { ManagementGroupService } from './management.group.service';
 import { parse } from 'csv-parse';
 import { NotificationService } from './notification.service';
@@ -11,9 +11,9 @@ import { ExpenseSplit } from '../entities/expense.split';
 import { SettleExpenseDto } from '../dtos/expense/settle.expense.dto';
 import { ExpenseSplitStatus } from '../enums/expanse.split.status.enum';
 import { InjectQueue } from '@nestjs/bullmq';
-import { QUEUE_ENUM } from 'src/common/enum/queue.enum';
+import { QUEUE_ENUM } from '../../common/enum/queue.enum';
 import { Queue } from 'bullmq';
-import { JOB_ENUM } from 'src/common/enum/job.enum';
+import { JOB_ENUM } from '../../common/enum/job.enum';
 
 @Injectable()
 export class ExpenseService {

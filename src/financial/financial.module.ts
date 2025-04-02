@@ -7,9 +7,9 @@ import { ManagementGroupController } from './controllers/management.group.contro
 import { ManagementGroupService } from './services/management.group.service';
 import { ExpenseController } from './controllers/expense.controller';
 import { ExpenseService } from './services/expense.service';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 import { BullModule } from '@nestjs/bullmq';
-import { QUEUE_ENUM } from 'src/common/enum/queue.enum';
+import { QUEUE_ENUM } from '../common/enum/queue.enum';
 import { NotificationService } from './services/notification.service';
 import { MailModule } from '@app/mail';
 import { NotificationConsumer } from './consumers/notification.consumer';

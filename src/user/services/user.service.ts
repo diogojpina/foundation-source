@@ -42,6 +42,8 @@ export class UserService {
       where: { email: dto.email },
     });
 
+    console.log('existingUsers', existingUsers);
+
     if (existingUsers)
       throw new HttpException('Email already exists.', HttpStatus.NOT_FOUND);
 

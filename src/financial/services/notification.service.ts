@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Expense } from '../entities/expense';
 import { ManagementGroupService } from './management.group.service';
 import { InjectQueue } from '@nestjs/bullmq';
-import { QUEUE_ENUM } from 'src/common/enum/queue.enum';
+import { QUEUE_ENUM } from '../../common/enum/queue.enum';
 import { Queue } from 'bullmq';
 import { EmailDto } from '../dtos/email/email.dto';
-import { JOB_ENUM } from 'src/common/enum/job.enum';
+import { JOB_ENUM } from '../../common/enum/job.enum';
 import { ExpenseSplit } from '../entities/expense.split';
 
 @Injectable()

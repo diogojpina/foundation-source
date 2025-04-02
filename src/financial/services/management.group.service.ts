@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ManagementGroup } from '../entities/management.group';
 import { Repository } from 'typeorm';
 import { AddMembersDto, CreateManagementGroupDto } from '../dtos';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../../user/entities/user.entity';
 import { ExpenseSplitStatus } from '../enums/expanse.split.status.enum';
 
 @Injectable()

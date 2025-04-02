@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { QUEUE_ENUM } from 'src/common/enum/queue.enum';
+import { QUEUE_ENUM } from '../../common/enum/queue.enum';
 import { ExpenseService } from '../services/expense.service';
 import { CreateExpenseDto } from '../dtos';
 

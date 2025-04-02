@@ -1,7 +1,7 @@
 import { MailService } from '@app/mail';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { QUEUE_ENUM } from 'src/common/enum/queue.enum';
+import { QUEUE_ENUM } from '../../common/enum/queue.enum';
 import { EmailDto } from '../dtos/email/email.dto';
 
 @Processor(QUEUE_ENUM.NOTIFICATION)

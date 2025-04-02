@@ -1,5 +1,5 @@
-import { Expense } from 'src/financial/entities/expense';
-import { ManagementGroup } from 'src/financial/entities/management.group';
+import { Expense } from '../../financial/entities/expense';
+import { ManagementGroup } from '../../financial/entities/management.group';
 import {
   Column,
   Entity,
