@@ -78,7 +78,7 @@ describe('UserService', () => {
   });
 
   describe('create', () => {
-    it('should create and user', async () => {
+    it('should create an user', async () => {
       jest
         .spyOn(userRepository, 'findOne')
         .mockImplementation(() => Promise.resolve(null));
