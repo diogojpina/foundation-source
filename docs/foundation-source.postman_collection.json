@@ -1,0 +1,350 @@
+{
+	"info": {
+		"_postman_id": "b0493d37-0c07-44c9-b08c-b0895a8c1975",
+		"name": "Foundation Source",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2660832"
+	},
+	"item": [
+		{
+			"name": "Management Group",
+			"item": [
+				{
+					"name": "Search Management Group",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/management-group",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"management-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Management Group Members Balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/management-group/1",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"management-group",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Management Group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"work\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/management-group",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"management-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Members to Management Group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"memberIds\": [\n        1, 2, 3\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/management-group/add-members/1",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"management-group",
+								"add-members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Management Group Balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/management-group/balance/1",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"management-group",
+								"balance",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Expense",
+			"item": [
+				{
+					"name": "Search Expenses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/expense",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"expense"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Expense",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/expense/1",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"expense",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Expense",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"groupId\": 1,\n  \"name\": \"eletric power bill\",\n  \"amount\": 30,\n  \"payerId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/expense",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"expense"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Expense Split",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"groupId\": 1,\n  \"name\": \"eletric power bill\",\n  \"amount\": 50,\n  \"payerId\": 1,\n  \"splitMemberIdsToExclude\": [3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/expense",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"expense"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Expense Batch",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/run/user/1000/doc/723025b5/expenses.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/expense/batch",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"expense",
+								"batch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Settle Expense",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"memberIds\": [1]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/expense/settle/1",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"expense",
+								"settle",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@email.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://foundation-source.coderlab.com.br/user",
+							"protocol": "http",
+							"host": [
+								"foundation-source",
+								"coderlab",
+								"com",
+								"br"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
