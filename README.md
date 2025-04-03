@@ -1,30 +1,64 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Description
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This API for splitting expenses among group members.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The API is running on [https://foundation-source.coderlab.com.br](https://foundation-source.coderlab.com.br).
 
-## Description
+## Features implementated
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Management Group
+
+- List management groups
+- Get a management group
+- Create management group
+- Add members to a management group
+- Get a balance for a management group
+
+Expenses
+
+- List expenses
+- Get an exp
+- Create expenses
+- Create expenses in batch receiving an CSV file as [here](https://raw.githubusercontent.com/diogojpina/foundation-source/refs/heads/main/test/fixtures/csv/expenses.csv)
+- Settle expenses splits (https://raw.githubusercontent.com/diogojpina/foundation-source/refs/heads/main/test/fixtures/csv/expenses.csv)
+
+User
+
+- Create user
+
+## Detaisl
+
+For scale optimization I'm using queues. The API adds email requests to notification queue so that notification.consumer can read the queue and send emails one by one. The API also adds expense dto to the expense queue when reads the CSV file to be processed asyncronously. Then the create.expense consumer reads the expense queue to create the expenses. This way, it doesn't hold the user waiting the API create many expenses.
+
+I used MinIO, instead of AWS S3, because I deployed the application in a VPS server. I used the MinIO to store the CSV files. I created a library to abstract MinIO calls.
+
+I created a mail library to mock third party email service calls. In fact, this services is logging the email to console.
+
+I developed Unit tests and e2e tests. I added explanations to run tests in the above section.
+
+## Technologies
+
+- Node 20
+- [NestJS 11](https://nestjs.com/)
+- [TypeORM](https://typeorm.io/)
+- [BullMQ](https://docs.bullmq.io/)
+- [Jest](https://jestjs.io/)
+- [csv-parser](https://www.npmjs.com/package/csv-parser)
+- [class-transformer](https://www.npmjs.com/package/class-transformer)
+- [class-validator](https://www.npmjs.com/package/class-validator)
+- [multer](https://www.npmjs.com/package/multer)
+
+### Service
+
+- [sqlite3](https://www.sqlite.org/) - database
+- [redis](https://redis.io/) - queue with bullmq
+- [MinIO](https://min.io/) - S3 compatible API to store files (CSV)
+
+## Documentation
+
+You can access the live API documentation on [Swagger](https://foundation-source.coderlab.com.br/docs)
+
+Or you can download a Postman collection on [Postman Collection](https://raw.githubusercontent.com/diogojpina/foundation-source/refs/heads/main/docs/foundation-source.postman_collection.json)
 
 ## Project setup
 
@@ -52,7 +86,8 @@ $ yarn run start:prod
 $ yarn run test
 
 # e2e tests
-$ yarn run test:e2e
+$ yarn run test:e2e:management-group
+$ yarn run test:e2e:expense
 
 # test coverage
 $ yarn run test:cov
@@ -60,39 +95,23 @@ $ yarn run test:cov
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+We are deploying this app into [Contabo VPS](https://contabo.com/en/vps), we are using Nginx and PM2. To create a build and deploy it, you have to create an Nginx vhost to redirect requests to [PM2](https://pm2.keymetrics.io).
 
 ```bash
-$ yarn install -g mau
-$ mau deploy
+$ yarn build
+$ cd dist
+$ pm2 start main.js --name foundation-source -i max
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Then, you have to start redis and minio into the docker-file.yaml. Inside of projects path, run and wait a few seconds to start the services.
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+$ docker compose up -d
+```
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Diogo Pina](http://linkedin.com/in/diogojpina)
 
 ## License
 
