@@ -26,7 +26,7 @@ User
 
 - Create user
 
-## Detaisl
+## Project Decisions
 
 For scale optimization I'm using queues. The API adds email requests to notification queue so that notification.consumer can read the queue and send emails one by one. The API also adds expense dto to the expense queue when reads the CSV file to be processed asyncronously. Then the create.expense consumer reads the expense queue to create the expenses. This way, it doesn't hold the user waiting the API create many expenses.
 
